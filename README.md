@@ -1,2 +1,3 @@
 # VNTech_PC_Shop
 This is an e-commerce application for buying, selling, and assembling VNTech PCs.
+From 10/10/2025 to ...
