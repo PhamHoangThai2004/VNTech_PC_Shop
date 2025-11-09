@@ -1,0 +1,19 @@
+package com.pht.vntechpc.data.remote.api
+
+import com.pht.vntechpc.data.remote.model.response.BaseResponse
+import com.pht.vntechpc.data.remote.model.response.PagedProductsResponse
+import com.pht.vntechpc.data.remote.model.response.ProductResponse
+import com.pht.vntechpc.data.remote.network.NoAuth
+import retrofit2.Response
+import retrofit2.http.GET
+import retrofit2.http.Path
+
+interface ProductApi {
+    @NoAuth
+    @GET("v1/products")
+    suspend fun fetchProducts(): Response<BaseResponse<PagedProductsResponse>>
+
+    @NoAuth
+    @GET("v1/products/{id}")
+    suspend fun fetchProductById(@Path("id") productId: Int): Response<BaseResponse<ProductResponse>>
+}

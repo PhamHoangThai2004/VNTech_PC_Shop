@@ -26,8 +26,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -40,9 +40,9 @@ import com.pht.vntechpc.ui.component.LoadingDialog
 import com.pht.vntechpc.ui.component.MessageDialog
 import com.pht.vntechpc.ui.component.OutlinedButtonComponent
 import com.pht.vntechpc.ui.component.textFieldColors
-import com.pht.vntechpc.ui.theme.Black
-import com.pht.vntechpc.ui.theme.Gray
-import com.pht.vntechpc.ui.theme.White
+import com.pht.vntechpc.ui.theme.Background
+import com.pht.vntechpc.ui.theme.TextFieldPlaceholder
+import com.pht.vntechpc.ui.theme.TextPrimary
 import com.pht.vntechpc.viewmodel.ForgetState
 import com.pht.vntechpc.viewmodel.ForgetStatePage
 import com.pht.vntechpc.viewmodel.ForgetUiState
@@ -56,13 +56,13 @@ fun ForgetScreen(navController: NavController, viewModel: ForgetViewModel = hilt
 
     HandleForgotSideEffects(state, viewModel, navController)
     Scaffold(
-        containerColor = White,
+        containerColor = Background,
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Khôi phục mật khẩu")
+                    Text(text = "Khôi phục mật khẩu", fontWeight = FontWeight.Bold)
                 }, colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = White, titleContentColor = Black
+                    containerColor = Background, titleContentColor = TextPrimary
                 ), navigationIcon = {
                     IconButton(onClick = {
                         when (state.isPage) {
@@ -78,17 +78,14 @@ fun ForgetScreen(navController: NavController, viewModel: ForgetViewModel = hilt
                         )
                     }
                 })
-        }) {
-
+        }) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(innerPadding)
                 .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            Spacer(modifier = Modifier.height(90.dp))
-
             Image(
                 modifier = Modifier
                     .size(80.dp)
@@ -112,7 +109,9 @@ fun ForgetScreen(navController: NavController, viewModel: ForgetViewModel = hilt
 private fun EnterEmailPage(viewModel: ForgetViewModel, state: ForgetUiState) {
     Column {
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp)),
             value = state.email,
             onValueChange = { viewModel.updateEmail(it) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -151,7 +150,9 @@ private fun EnterEmailPage(viewModel: ForgetViewModel, state: ForgetUiState) {
 private fun ConfirmOtpPage(viewModel: ForgetViewModel, state: ForgetUiState) {
     Column {
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp)),
             value = state.otp,
             onValueChange = { viewModel.updateOtp(it) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -159,7 +160,7 @@ private fun ConfirmOtpPage(viewModel: ForgetViewModel, state: ForgetUiState) {
             supportingText = { if (!state.isValidOtp) Text(text = state.otpError) },
             shape = RoundedCornerShape(6.dp),
             singleLine = true,
-            placeholder = { Text(text = "Nhập mã OTP", color = Gray) },
+            placeholder = { Text(text = "Nhập mã OTP", color = TextFieldPlaceholder) },
             colors = textFieldColors()
         )
 
@@ -189,7 +190,9 @@ private fun ConfirmOtpPage(viewModel: ForgetViewModel, state: ForgetUiState) {
 private fun EnterNewPasswordPage(viewModel: ForgetViewModel, state: ForgetUiState) {
     Column {
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp)),
             value = state.newPassword,
             onValueChange = { viewModel.updatePassword(it) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),

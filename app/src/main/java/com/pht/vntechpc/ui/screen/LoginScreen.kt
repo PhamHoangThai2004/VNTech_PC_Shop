@@ -46,9 +46,10 @@ import com.pht.vntechpc.ui.component.MessageDialog
 import com.pht.vntechpc.ui.component.OutlinedButtonComponent
 import com.pht.vntechpc.ui.component.textFieldColors
 import com.pht.vntechpc.ui.navigation.Route
-import com.pht.vntechpc.ui.theme.Black
-import com.pht.vntechpc.ui.theme.Gray
-import com.pht.vntechpc.ui.theme.White
+import com.pht.vntechpc.ui.theme.Background
+import com.pht.vntechpc.ui.theme.Border
+import com.pht.vntechpc.ui.theme.TextDisabled
+import com.pht.vntechpc.ui.theme.TextPrimary
 import com.pht.vntechpc.viewmodel.LoginState
 import com.pht.vntechpc.viewmodel.LoginUiState
 import com.pht.vntechpc.viewmodel.LoginViewModel
@@ -61,40 +62,29 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
 
     HandleLoginSideEffects(state, viewModel, navController)
     Scaffold(
-        containerColor = White,
+        containerColor = Background,
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Đăng nhập")
+                    Text(text = "Đăng nhập", fontWeight = FontWeight.Bold)
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = White,
-                    titleContentColor = Black
-                ),
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.arrow_back_24),
-                            contentDescription = null,
-                            modifier = Modifier.size(30.dp)
-                        )
-                    }
-                }
+                    containerColor = Background,
+                    titleContentColor = TextPrimary
+                )
             )
-        },
-
-        ) {
+        }
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(innerPadding)
                 .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            Spacer(modifier = Modifier.height(90.dp))
-
+            val modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
             Image(
                 modifier = Modifier
                     .size(80.dp)
@@ -106,7 +96,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = modifier,
                 value = state.email,
                 onValueChange = { viewModel.updateEmail(it) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -121,9 +111,12 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                 },
                 trailingIcon = {
                     if (state.email.isNotEmpty())
-                        IconButton(onClick = {
-                            viewModel.updateEmail("")
-                        }) { Icon(painterResource(R.drawable.close_24), contentDescription = null) }
+                        IconButton(onClick = { viewModel.updateEmail("") }) {
+                            Icon(
+                                painterResource(R.drawable.close_24),
+                                contentDescription = null
+                            )
+                        }
                     else null
                 },
                 singleLine = true,
@@ -134,7 +127,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
             Spacer(modifier = Modifier.height(10.dp))
 
             OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = modifier,
                 value = state.password,
                 onValueChange = { viewModel.updatePassword(it) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -169,7 +162,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
 
             Text(
                 text = "Quên mật khẩu?",
-                color = Black,
+                color = TextPrimary,
                 fontWeight = FontWeight.W500,
                 fontSize = 14.sp,
                 modifier = Modifier
@@ -195,13 +188,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
             Spacer(modifier = Modifier.height(20.dp))
 
             OutlinedButtonComponent(
-                onClick = {
-                    navController.navigate(Route.Signup.route) {
-                        popUpTo(Route.Login.route) {
-                            inclusive = true
-                        }
-                    }
-                },
+                onClick = { navController.navigate(Route.Signup.route) },
                 content = "Tạo tài khoản mới",
                 modifier = Modifier
                     .fillMaxWidth()
@@ -220,17 +207,17 @@ private fun DividerComponent() {
         HorizontalDivider(
             modifier = Modifier.weight(1f),
             thickness = 1.dp,
-            color = Gray
+            color = Border
         )
         Text(
             text = "hoặc",
             modifier = Modifier.padding(horizontal = 8.dp),
-            color = Gray
+            color = TextDisabled
         )
         HorizontalDivider(
             modifier = Modifier.weight(1f),
             thickness = 1.dp,
-            color = Gray
+            color = Border
         )
     }
 }
@@ -261,7 +248,7 @@ private fun HandleLoginSideEffects(
             MessageDialog(message = status.message, onAction = { viewModel.resetState() })
         }
 
-        is LoginState.Loading -> LoadingDialog()
+        is LoginState.Loading -> LoadingDialog("Đang đăng nhập...")
         else -> Unit
     }
 }

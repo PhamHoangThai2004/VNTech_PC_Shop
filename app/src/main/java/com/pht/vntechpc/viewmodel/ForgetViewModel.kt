@@ -126,12 +126,13 @@ class ForgetViewModel @Inject constructor(
             val result = forgetPasswordUseCase(email)
             result.onSuccess {
                 Log.d("ForgetViewModel", "Password reset email sent successfully")
-                _uiState.value = _uiState.value.copy(status = ForgetState.ForgetPasswordSuccess(it))
+                _uiState.value =
+                    _uiState.value.copy(status = ForgetState.ForgetPasswordSuccess(it.message))
 
             }.onFailure {
                 Log.d("ForgetViewModel", "Password reset email sent failed: ${it.message}")
                 _uiState.value =
-                    _uiState.value.copy(status = ForgetState.Failure("Không thể gửi email"))
+                    _uiState.value.copy(status = ForgetState.Failure(it.message.toString()))
             }
         }
     }
@@ -145,10 +146,12 @@ class ForgetViewModel @Inject constructor(
             val result = verifyResetOtpUseCase(otp)
             result.onSuccess {
                 Log.d("ForgetViewModel", "OTP verified successfully")
-                _uiState.value = _uiState.value.copy(status = ForgetState.VerifyResetOtpSuccess(it))
+                _uiState.value =
+                    _uiState.value.copy(status = ForgetState.VerifyResetOtpSuccess(it.message))
             }.onFailure {
                 Log.d("ForgetViewModel", "OTP verification failed: ${it.message}")
-                _uiState.value = _uiState.value.copy(status = ForgetState.Failure("${it.message}"))
+                _uiState.value =
+                    _uiState.value.copy(status = ForgetState.Failure(it.message.toString()))
             }
         }
     }
@@ -162,7 +165,8 @@ class ForgetViewModel @Inject constructor(
             val result = resetPasswordUseCase(email, newPassword)
             result.onSuccess {
                 Log.d("ForgetViewModel", "Password reset successfully")
-                _uiState.value = _uiState.value.copy(status = ForgetState.ResetPasswordSuccess(it))
+                _uiState.value =
+                    _uiState.value.copy(status = ForgetState.ResetPasswordSuccess(it.message))
 
             }.onFailure {
                 Log.d("ForgetViewModel", "Password reset failed: ${it.message}")
@@ -175,7 +179,7 @@ class ForgetViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(status = ForgetState.Loading)
             val result = forgetPasswordUseCase(_uiState.value.email)
             result.onSuccess {
-                Log.d("BBB", "Resend email successful: $it")
+                Log.d("BBB", "Resend email successful: ${it.message}")
                 _uiState.value =
                     _uiState.value.copy(
                         status = ForgetState.ForgetPasswordSuccess("Đã gửi lại mã OTP"),
@@ -183,7 +187,7 @@ class ForgetViewModel @Inject constructor(
             }.onFailure {
                 Log.d("BBB", "Resend email failed: ${it.message}")
                 _uiState.value = _uiState.value.copy(
-                    status = ForgetState.Failure("Không thể gửi email"),
+                    status = ForgetState.Failure(it.message.toString()),
                 )
             }
         }

@@ -1,6 +1,5 @@
 package com.pht.vntechpc.domain.usecase.auth
 
-import com.pht.vntechpc.data.remote.service.AuthService
 import com.pht.vntechpc.domain.repository.AuthRepository
 import jakarta.inject.Inject
 

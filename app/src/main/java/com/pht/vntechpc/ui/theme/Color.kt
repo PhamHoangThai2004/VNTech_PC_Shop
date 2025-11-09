@@ -10,14 +10,43 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-val White = Color(0xFFFFFFFF)
-val Alto = Color(0xFFCFCFCF)
+// Background
+val Background = Color(0xFFFFFFFF)
+val DarkBackground = Color(0xFF181313)
+val BackgroundSecondary = Color(0xFFE6E0E9)
 
-val Black = Color(0xFF000000)
-val CodGrey = Color(0xFF181313)
+val Border = Color(0xFF808080)
 
-val Gray = Color(0xFF808080)
-val Red = Color(0xFFFF0000)
-val DarkGrey = Color(0xFF444444)
+// Text
+val TextPrimary = Color(0xFF000000)
+val TextOnPrimary = Color(0xFFFFFFFF)
+val TextDisabled = Color(0xFF808080)
 
-val Transparent = Color(0x00000000)
+// Icon
+val IconPrimary = Color(0xFF000000)
+val IconSecondary = Color(0xFF444444)
+val IconOnPrimary = Color(0xFFFFFFFF)
+
+// TextField
+val TextFieldLabel = Color(0xFF000000)
+val TextFieldContent = Color(0xFF000000)
+val TextFieldBackground = Color(0xFFFFFFFF)
+val TextFieldPlaceholder = Color(0xFF979797)
+val FocusedTextFieldBorder = Color(0xFF000000)
+val UnfocusedTextFieldBorder = Color(0xFFCFCFCF)
+val ErrorTextField = Color(0xFFFF0000)
+val CursorColor = Color(0xFF000000)
+
+// Navigation
+val Selected = Color(0xFF000000)
+val Unselected = Color(0xFF808080)
+
+// Dialog
+val DialogBackground = Color(0x00000000)
+
+// Button
+val ButtonPrimaryBackground = Color(0xFF000000)
+val ButtonPrimaryContent = Color(0xFFFFFFFF)
+val ButtonSecondaryBackground = Color(0xFFFFFFFF)
+val ButtonSecondaryContent = Color(0xFF000000)
+val ButtonSecondaryBorder = Color(0xFF000000)

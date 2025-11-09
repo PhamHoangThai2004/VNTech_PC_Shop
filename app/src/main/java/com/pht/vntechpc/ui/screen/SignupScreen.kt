@@ -1,6 +1,7 @@
 package com.pht.vntechpc.ui.screen
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -40,9 +42,9 @@ import com.pht.vntechpc.ui.component.MessageDialog
 import com.pht.vntechpc.ui.component.OutlinedButtonComponent
 import com.pht.vntechpc.ui.component.textFieldColors
 import com.pht.vntechpc.ui.navigation.Route
-import com.pht.vntechpc.ui.theme.Black
-import com.pht.vntechpc.ui.theme.Gray
-import com.pht.vntechpc.ui.theme.White
+import com.pht.vntechpc.ui.theme.Background
+import com.pht.vntechpc.ui.theme.TextFieldPlaceholder
+import com.pht.vntechpc.ui.theme.TextPrimary
 import com.pht.vntechpc.viewmodel.SignupState
 import com.pht.vntechpc.viewmodel.SignupStatePage
 import com.pht.vntechpc.viewmodel.SignupUiState
@@ -57,22 +59,24 @@ fun SignupScreen(navController: NavController, viewModel: SignupViewModel = hilt
     HandleSignupSideEffects(state, viewModel, navController)
 
     Scaffold(
-        containerColor = White,
+        containerColor = Background,
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Đăng ký")
+                    Text(text = "Đăng ký", fontWeight = FontWeight.Bold)
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = White,
-                    titleContentColor = Black
+                    containerColor = Background,
+                    titleContentColor = TextPrimary
                 ),
                 navigationIcon = {
                     IconButton(onClick = {
                         if (state.isPage is SignupStatePage.EnterAccount) {
                             navController.popBackStack()
+                            Log.d("BBB", "Back to login screen")
                         } else {
                             viewModel.backToEnterAccount()
+                            Log.d("BBB", "Back to Enter")
                         }
                     }) {
                         Icon(
@@ -85,24 +89,39 @@ fun SignupScreen(navController: NavController, viewModel: SignupViewModel = hilt
             )
         },
 
+        ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-        if (state.isPage is SignupStatePage.EnterAccount) EnterAccountPage(viewModel, state)
-        else ConfirmOtpPage(viewModel, state)
+            Image(
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(shape = CircleShape),
+                painter = painterResource(id = R.drawable.app_logo),
+                contentDescription = null
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            when (state.isPage) {
+                SignupStatePage.EnterAccount -> EnterAccountPage(viewModel, state)
+                SignupStatePage.ConfirmOtp -> ConfirmOtpPage(viewModel, state)
+            }
+        }
     }
 }
 
 @Composable
 private fun EnterAccountPage(viewModel: SignupViewModel, state: SignupUiState) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(100.dp))
+    Column {
+        val modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp))
 
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier,
             value = state.fullName,
             onValueChange = { viewModel.updateFullName(it) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -130,7 +149,7 @@ private fun EnterAccountPage(viewModel: SignupViewModel, state: SignupUiState) {
         Spacer(modifier = Modifier.height(10.dp))
 
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier,
             value = state.email,
             onValueChange = { viewModel.updateEmail(it) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -158,7 +177,7 @@ private fun EnterAccountPage(viewModel: SignupViewModel, state: SignupUiState) {
         Spacer(modifier = Modifier.height(10.dp))
 
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier,
             value = state.password,
             onValueChange = { viewModel.updatePassword(it) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -206,27 +225,9 @@ private fun EnterAccountPage(viewModel: SignupViewModel, state: SignupUiState) {
 
 @Composable
 private fun ConfirmOtpPage(viewModel: SignupViewModel, state: SignupUiState) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Spacer(modifier = Modifier.height(90.dp))
-
-        Image(
-            modifier = Modifier
-                .size(80.dp)
-                .clip(shape = CircleShape),
-            painter = painterResource(id = R.drawable.app_logo),
-            contentDescription = null
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
+    Column {
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)),
             value = state.otp,
             onValueChange = { viewModel.updateOtp(it) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -234,7 +235,7 @@ private fun ConfirmOtpPage(viewModel: SignupViewModel, state: SignupUiState) {
             supportingText = { if (!state.isValidOtp) Text(text = state.otpError) },
             shape = RoundedCornerShape(6.dp),
             singleLine = true,
-            placeholder = { Text(text = "Nhập mã OTP", color = Gray) },
+            placeholder = { Text(text = "Nhập mã OTP", color = TextFieldPlaceholder) },
             colors = textFieldColors()
         )
 
@@ -260,7 +261,6 @@ private fun ConfirmOtpPage(viewModel: SignupViewModel, state: SignupUiState) {
     }
 }
 
-
 @Composable
 private fun HandleSignupSideEffects(
     state: SignupUiState,
@@ -278,9 +278,7 @@ private fun HandleSignupSideEffects(
         is SignupState.VerifyOtpSuccess -> {
             MessageDialog(message = status.message, onAction = {
                 viewModel.resetState()
-                navController.navigate(Route.Login.route) {
-                    popUpTo(Route.Signup.route) { inclusive = true }
-                }
+                navController.popBackStack()
             })
         }
 

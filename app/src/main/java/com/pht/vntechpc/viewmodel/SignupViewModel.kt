@@ -143,11 +143,11 @@ class SignupViewModel @Inject constructor(
             result.onSuccess {
                 Log.d("BBB", "Register successful: $it")
                 _uiState.value =
-                    _uiState.value.copy(status = SignupState.RegisterSuccess(it))
+                    _uiState.value.copy(status = SignupState.RegisterSuccess(it.message))
             }.onFailure {
                 Log.d("BBB", "Register failed: ${it.message}")
                 _uiState.value = _uiState.value.copy(
-                    status = SignupState.Failure("Email đã được đăng ký trước đó"),
+                    status = SignupState.Failure(it.message.toString()),
                 )
             }
         }
@@ -161,13 +161,13 @@ class SignupViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(status = SignupState.Loading)
             val result = verifyOtpUseCase(otp)
             result.onSuccess {
-                Log.d("BBB", "Verify OTP successful: $it")
+                Log.d("BBB", "Verify OTP successful: ${it.message}")
                 _uiState.value =
-                    _uiState.value.copy(status = SignupState.VerifyOtpSuccess(it))
+                    _uiState.value.copy(status = SignupState.VerifyOtpSuccess(it.message))
             }.onFailure {
                 Log.d("BBB", "Verify OTP failed: ${it.message}")
                 _uiState.value =
-                    _uiState.value.copy(status = SignupState.Failure("${it.message}"))
+                    _uiState.value.copy(status = SignupState.Failure(it.message.toString()))
             }
         }
     }
@@ -189,7 +189,7 @@ class SignupViewModel @Inject constructor(
             }.onFailure {
                 Log.d("BBB", "Register failed: ${it.message}")
                 _uiState.value = _uiState.value.copy(
-                    status = SignupState.Failure("Email đã được đăng ký trước đó"),
+                    status = SignupState.Failure(it.message.toString()),
                 )
             }
         }

@@ -2,26 +2,29 @@ package com.pht.vntechpc.ui.component
 
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color.Companion.DarkGray
-import com.pht.vntechpc.ui.theme.Alto
-import com.pht.vntechpc.ui.theme.Black
-import com.pht.vntechpc.ui.theme.Red
-import com.pht.vntechpc.ui.theme.White
+import com.pht.vntechpc.ui.theme.CursorColor
+import com.pht.vntechpc.ui.theme.ErrorTextField
+import com.pht.vntechpc.ui.theme.FocusedTextFieldBorder
+import com.pht.vntechpc.ui.theme.IconSecondary
+import com.pht.vntechpc.ui.theme.TextFieldBackground
+import com.pht.vntechpc.ui.theme.TextFieldContent
+import com.pht.vntechpc.ui.theme.TextFieldLabel
+import com.pht.vntechpc.ui.theme.UnfocusedTextFieldBorder
 
 @Composable
 fun textFieldColors() = TextFieldDefaults.colors(
-    focusedLabelColor = Black,
-    focusedTextColor = Black,
-    unfocusedTextColor = Black,
-    focusedContainerColor = White,
-    unfocusedContainerColor = White,
-    focusedIndicatorColor = Black,
-    unfocusedIndicatorColor = Alto,
-    errorSupportingTextColor = Red,
-    errorIndicatorColor = Red,
-    errorContainerColor = White,
-    errorLabelColor = Red,
-    errorCursorColor = Red,
-    errorTrailingIconColor = DarkGray,
-    cursorColor = Black
+    focusedLabelColor = TextFieldLabel,
+    focusedTextColor = TextFieldContent,
+    unfocusedTextColor = TextFieldContent,
+    focusedContainerColor = TextFieldBackground,
+    unfocusedContainerColor = TextFieldBackground,
+    focusedIndicatorColor = FocusedTextFieldBorder,
+    unfocusedIndicatorColor = UnfocusedTextFieldBorder,
+    errorSupportingTextColor = ErrorTextField,
+    errorIndicatorColor = ErrorTextField,
+    errorContainerColor = TextFieldBackground,
+    errorLabelColor = ErrorTextField,
+    errorCursorColor = ErrorTextField,
+    errorTrailingIconColor = IconSecondary,
+    cursorColor = CursorColor
 )

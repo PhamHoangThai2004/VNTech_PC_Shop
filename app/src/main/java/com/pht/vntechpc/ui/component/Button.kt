@@ -8,10 +8,12 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.pht.vntechpc.ui.theme.Black
-import com.pht.vntechpc.ui.theme.White
+import com.pht.vntechpc.ui.theme.ButtonPrimaryBackground
+import com.pht.vntechpc.ui.theme.ButtonPrimaryContent
+import com.pht.vntechpc.ui.theme.ButtonSecondaryBackground
+import com.pht.vntechpc.ui.theme.ButtonSecondaryBorder
+import com.pht.vntechpc.ui.theme.ButtonSecondaryContent
 
 @Composable
 fun FilledButtonComponent(onClick: () -> Unit, content: String, modifier: Modifier = Modifier) {
@@ -20,8 +22,8 @@ fun FilledButtonComponent(onClick: () -> Unit, content: String, modifier: Modifi
         onClick = onClick,
         shape = RoundedCornerShape(6.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Black,
-            contentColor = White
+            containerColor = ButtonPrimaryBackground,
+            contentColor = ButtonPrimaryContent
         )
     ) {
         Text(text = content)
@@ -34,18 +36,12 @@ fun OutlinedButtonComponent(onClick: () -> Unit, content: String, modifier: Modi
         modifier = modifier,
         onClick = onClick,
         shape = RoundedCornerShape(6.dp),
-        border = BorderStroke(1.dp, Black),
+        border = BorderStroke(1.dp, ButtonSecondaryBorder),
         colors = ButtonDefaults.buttonColors(
-            containerColor = White,
-            contentColor = Black
+            containerColor = ButtonSecondaryBackground,
+            contentColor = ButtonSecondaryContent
         )
     ) {
         Text(text = content)
     }
-}
-
-@Preview
-@Composable
-fun ButtonPreview() {
-    OutlinedButtonComponent(onClick = {}, content = "Tạo tài khoản mới")
 }
