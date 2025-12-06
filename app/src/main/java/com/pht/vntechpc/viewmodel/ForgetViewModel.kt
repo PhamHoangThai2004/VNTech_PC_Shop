@@ -9,9 +9,11 @@ import com.pht.vntechpc.domain.usecase.auth.ResetPasswordUseCase
 import com.pht.vntechpc.domain.usecase.auth.VerifyResetOtpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @HiltViewModel
 class ForgetViewModel @Inject constructor(
@@ -123,7 +125,7 @@ class ForgetViewModel @Inject constructor(
 
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(status = ForgetState.Loading)
-            val result = forgetPasswordUseCase(email)
+            val result = withContext(Dispatchers.IO) { forgetPasswordUseCase(email) }
             result.onSuccess {
                 Log.d("ForgetViewModel", "Password reset email sent successfully")
                 _uiState.value =
@@ -143,7 +145,7 @@ class ForgetViewModel @Inject constructor(
 
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(status = ForgetState.Loading)
-            val result = verifyResetOtpUseCase(otp)
+            val result = withContext(Dispatchers.IO) { verifyResetOtpUseCase(otp) }
             result.onSuccess {
                 Log.d("ForgetViewModel", "OTP verified successfully")
                 _uiState.value =
@@ -162,7 +164,7 @@ class ForgetViewModel @Inject constructor(
 
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(status = ForgetState.Loading)
-            val result = resetPasswordUseCase(email, newPassword)
+            val result = withContext(Dispatchers.IO) { resetPasswordUseCase(email, newPassword) }
             result.onSuccess {
                 Log.d("ForgetViewModel", "Password reset successfully")
                 _uiState.value =

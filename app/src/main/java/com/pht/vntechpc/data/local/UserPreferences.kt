@@ -12,15 +12,24 @@ import kotlinx.coroutines.flow.first
 
 class UserPreferences(private val context: Context) {
     companion object {
-        private val TOKEN = stringPreferencesKey("token")
+        private val ACCESS_TOKEN = stringPreferencesKey("access_token")
+        private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         private val USER = stringPreferencesKey("user")
     }
 
-    suspend fun getToken() = context.userPreferences.data.first()[TOKEN]
+    suspend fun getAccessToken() = context.userPreferences.data.first()[ACCESS_TOKEN]
 
-    suspend fun saveToken(token: String) {
+    suspend fun getRefreshToken() = context.userPreferences.data.first()[REFRESH_TOKEN]
+
+    suspend fun saveAccessToken(token: String) {
         context.userPreferences.edit {
-            it[TOKEN] = token
+            it[ACCESS_TOKEN] = token
+        }
+    }
+
+    suspend fun saveRefreshToken(token: String) {
+        context.userPreferences.edit {
+            it[REFRESH_TOKEN] = token
         }
     }
 

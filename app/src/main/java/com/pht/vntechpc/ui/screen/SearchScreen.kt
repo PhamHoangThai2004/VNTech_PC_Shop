@@ -35,12 +35,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.pht.vntechpc.R
 import com.pht.vntechpc.ui.theme.Background
 import com.pht.vntechpc.ui.theme.BackgroundSecondary
@@ -50,6 +47,9 @@ import com.pht.vntechpc.ui.theme.IconPrimary
 import com.pht.vntechpc.ui.theme.TextFieldPlaceholder
 import com.pht.vntechpc.ui.theme.TextOnPrimary
 import com.pht.vntechpc.ui.theme.TextPrimary
+import com.pht.vntechpc.viewmodel.SearchStatePage
+import com.pht.vntechpc.viewmodel.SearchUiState
+import com.pht.vntechpc.viewmodel.SearchViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

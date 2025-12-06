@@ -6,6 +6,7 @@ import retrofit2.Response
 import java.io.IOException
 
 abstract class BaseRepository {
+    // Chỉ lấy ra data trả về
     protected suspend fun <T, R> apiCall(apiCall: suspend () -> Response<BaseResponse<T>>, transform: (T) -> R): Result<R> {
         return try {
             val response = apiCall()
@@ -35,6 +36,7 @@ abstract class BaseRepository {
         }
     }
 
+    // Lấy nguyên data trả về
     protected suspend fun <T> apiCallRaw(apiCall: suspend () -> Response<BaseResponse<T>>): Result<T> {
         return try {
             val response = apiCall()
@@ -64,6 +66,7 @@ abstract class BaseRepository {
         }
     }
 
+    // Giữ nguyên response trả về
     protected suspend fun <Unit> apiCallNoData(apiCall: suspend () -> Response<BaseResponse<Unit>>): Result<BaseResponse<Unit>> {
         return try {
             val response = apiCall()

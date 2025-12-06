@@ -1,9 +1,10 @@
 package com.pht.vntechpc.data.remote.api
 
 import com.pht.vntechpc.data.remote.model.request.LoginRequest
+import com.pht.vntechpc.data.remote.model.request.RefreshTokenRequest
 import com.pht.vntechpc.data.remote.model.request.RegisterRequest
 import com.pht.vntechpc.data.remote.model.response.BaseResponse
-import com.pht.vntechpc.data.remote.model.response.LoginResponse
+import com.pht.vntechpc.data.remote.model.response.AuthResponse
 import com.pht.vntechpc.data.remote.network.NoAuth
 import retrofit2.Response
 import retrofit2.http.Body
@@ -13,7 +14,7 @@ import retrofit2.http.Query
 interface AuthApi {
     @NoAuth
     @POST("v1/login")
-    suspend fun login(@Body request: LoginRequest): Response<BaseResponse<LoginResponse>>
+    suspend fun login(@Body request: LoginRequest): Response<BaseResponse<AuthResponse>>
 
     @NoAuth
     @POST("v1/register")
@@ -37,4 +38,8 @@ interface AuthApi {
         @Query("email") email: String,
         @Query("newPassword") newPassword: String
     ): Response<BaseResponse<Unit>>
+
+    @NoAuth
+    @POST("v1/refresh-token")
+    suspend fun refreshToken(@Body request: RefreshTokenRequest): Response<BaseResponse<AuthResponse>>
 }

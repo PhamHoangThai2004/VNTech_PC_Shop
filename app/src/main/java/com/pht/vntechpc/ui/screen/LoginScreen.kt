@@ -45,6 +45,7 @@ import com.pht.vntechpc.ui.component.LoadingDialog
 import com.pht.vntechpc.ui.component.MessageDialog
 import com.pht.vntechpc.ui.component.OutlinedButtonComponent
 import com.pht.vntechpc.ui.component.textFieldColors
+import com.pht.vntechpc.ui.navigation.Graph
 import com.pht.vntechpc.ui.navigation.Route
 import com.pht.vntechpc.ui.theme.Background
 import com.pht.vntechpc.ui.theme.Border
@@ -85,6 +86,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
             val modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
+
             Image(
                 modifier = Modifier
                     .size(80.dp)
@@ -231,11 +233,10 @@ private fun HandleLoginSideEffects(
     LaunchedEffect(state.status) {
         when (state.status) {
             is LoginState.Success -> {
-                navController.navigate(Route.Main.route) {
-                    popUpTo(0) {
+                navController.navigate(Graph.Main.graph) {
+                    popUpTo(Graph.Auth.graph) {
                         inclusive = true
                     }
-                    launchSingleTop = true
                 }
             }
 

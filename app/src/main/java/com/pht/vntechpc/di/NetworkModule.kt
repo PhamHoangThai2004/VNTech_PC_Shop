@@ -1,7 +1,9 @@
 package com.pht.vntechpc.di
 
 import android.content.Context
+import com.pht.vntechpc.data.remote.api.AddressApi
 import com.pht.vntechpc.data.remote.api.AuthApi
+import com.pht.vntechpc.data.remote.api.CartApi
 import com.pht.vntechpc.data.remote.api.CategoryApi
 import com.pht.vntechpc.data.remote.api.ProductApi
 import com.pht.vntechpc.data.remote.api.UserApi
@@ -13,6 +15,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import javax.inject.Singleton
+import kotlin.jvm.java
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -38,4 +41,14 @@ object NetworkModule {
     @Singleton
     fun provideProductApi(retrofit: Retrofit): ProductApi =
         retrofit.create(ProductApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideCartApi(retrofit: Retrofit): CartApi =
+        retrofit.create(CartApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideAddressApi(retrofit: Retrofit): AddressApi =
+        retrofit.create(AddressApi::class.java)
 }

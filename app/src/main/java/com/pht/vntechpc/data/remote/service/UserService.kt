@@ -15,7 +15,7 @@ class UserService @Inject constructor(private val api: UserApi) {
     suspend fun updateUser(email: String, request: UserRequest) =
         api.updateUser(email, request)
 
-    suspend fun uploadAvatar(userId: String, file: MultipartBody.Part) = api.uploadAvatar(userId, file)
+    suspend fun uploadAvatar(userId: Int, file: MultipartBody.Part) = api.uploadAvatar(userId, file)
 
-    suspend fun deleteAvatar(userId: String) = api.deleteAvatar(userId)
+    suspend fun deleteAvatar(userId: Int) = api.deleteAvatar(userId)
 }

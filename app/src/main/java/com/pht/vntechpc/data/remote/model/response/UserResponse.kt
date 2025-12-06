@@ -3,6 +3,7 @@ package com.pht.vntechpc.data.remote.model.response
 import com.pht.vntechpc.domain.model.User
 
 data class UserResponse (
+    val id: Int,
     val email: String,
     val username: String,
     val fullName: String,
@@ -12,5 +13,5 @@ data class UserResponse (
 )
 
 fun UserResponse.toUser(): User {
-    return User(email, username, fullName, gender, avatar, dateOfBirth)
+    return User(id, email, fullName, gender, avatar, dateOfBirth)
 }

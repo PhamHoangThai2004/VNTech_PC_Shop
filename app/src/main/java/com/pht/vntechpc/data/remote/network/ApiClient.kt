@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object ApiClient {
-    private const val BASE_URL = "http://192.168.1.28:8080/api/"
+    private const val BASE_URL = "http://192.168.1.29:8080/api/"
 
     fun create(context: Context): Retrofit {
         val userPreferences = UserPreferences(context)
@@ -21,7 +21,7 @@ object ApiClient {
 
         val client = OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor {
-                runBlocking { userPreferences.getToken() }
+                runBlocking { userPreferences.getAccessToken() }
             })
             .addInterceptor(logging)
             .connectTimeout(30, TimeUnit.SECONDS)

@@ -4,35 +4,43 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pht.vntechpc.data.local.UserPreferences
-import com.pht.vntechpc.domain.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import kotlinx.coroutines.withContext
+import jakarta.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(private val userPreferences: UserPreferences) :
     ViewModel() {
-    init {
-        getUser()
-    }
 
-    private val _user = MutableStateFlow<User?>(null)
-    val user: StateFlow<User?> = _user
+    private val _uiState = MutableStateFlow(ProfileUIState())
+    val uiState: StateFlow<ProfileUIState> = _uiState
 
-    private fun getUser() {
+    fun getUser() {
         viewModelScope.launch {
-            val user = userPreferences.getUser()
+            val user = withContext(Dispatchers.IO) { userPreferences.getUser() }
             Log.d("BBB", "Profile: $user")
-            _user.value = user
+            _uiState.value = _uiState.value.copy(
+                fullName = user?.fullName,
+                avatar = user?.avatar,
+                userId = user?.id
+            )
         }
     }
 
     fun logout() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             userPreferences.clear()
         }
     }
 }
+
+data class ProfileUIState(
+    val fullName: String? = null,
+    val avatar: String? = null,
+    val userId : Int? = null
+)
 

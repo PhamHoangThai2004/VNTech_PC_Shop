@@ -16,10 +16,16 @@ import com.pht.vntechpc.ui.theme.ButtonSecondaryBorder
 import com.pht.vntechpc.ui.theme.ButtonSecondaryContent
 
 @Composable
-fun FilledButtonComponent(onClick: () -> Unit, content: String, modifier: Modifier = Modifier) {
+fun FilledButtonComponent(
+    onClick: () -> Unit,
+    content: String,
+    modifier: Modifier = Modifier,
+    enable: Boolean = true
+) {
     Button(
         modifier = modifier,
         onClick = onClick,
+        enabled = enable,
         shape = RoundedCornerShape(6.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = ButtonPrimaryBackground,

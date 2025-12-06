@@ -7,10 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.pht.vntechpc.domain.usecase.auth.RegisterUseCase
 import com.pht.vntechpc.domain.usecase.auth.VerifyOtpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import kotlinx.coroutines.withContext
+import jakarta.inject.Inject
 
 @HiltViewModel
 class SignupViewModel @Inject constructor(
@@ -67,23 +69,24 @@ class SignupViewModel @Inject constructor(
     }
 
     fun updateFullName(fullName: String) {
-        if (fullName.trim().isNotEmpty()) {
+        if (fullName.trim().length > 255) {
+            _uiState.value = _uiState.value.copy(
+                fullName = fullName,
+                isValidFullName = false,
+                fullNameError = "Tên quá dài"
+            )
+        }
+        else if (fullName.trim().isNotEmpty()) {
             _uiState.value = _uiState.value.copy(
                 fullName = fullName,
                 isValidFullName = true,
                 fullNameError = ""
             )
-        } else if (fullName.trim().isEmpty()) {
+        } else {
             _uiState.value = _uiState.value.copy(
                 fullName = fullName,
                 isValidFullName = false,
                 fullNameError = "Yêu cầu nhập tên"
-            )
-        } else {
-            _uiState.value = _uiState.value.copy(
-                fullName = fullName,
-                isValidFullName = true,
-                fullNameError = "Tên quá dài"
             )
         }
     }
@@ -139,7 +142,8 @@ class SignupViewModel @Inject constructor(
 
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(status = SignupState.Loading)
-            val result = registerUseCase(email, password, name.trim())
+            val result =
+                withContext(Dispatchers.IO) { registerUseCase(email, password, name.trim()) }
             result.onSuccess {
                 Log.d("BBB", "Register successful: $it")
                 _uiState.value =
@@ -159,7 +163,7 @@ class SignupViewModel @Inject constructor(
 
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(status = SignupState.Loading)
-            val result = verifyOtpUseCase(otp)
+            val result = withContext(Dispatchers.IO) { verifyOtpUseCase(otp) }
             result.onSuccess {
                 Log.d("BBB", "Verify OTP successful: ${it.message}")
                 _uiState.value =
@@ -175,11 +179,13 @@ class SignupViewModel @Inject constructor(
     fun resendOtp() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(status = SignupState.Loading)
-            val result = registerUseCase(
-                _uiState.value.email,
-                _uiState.value.password,
-                _uiState.value.fullName
-            )
+            val result = withContext(Dispatchers.IO) {
+                registerUseCase(
+                    _uiState.value.email,
+                    _uiState.value.password,
+                    _uiState.value.fullName
+                )
+            }
             result.onSuccess {
                 Log.d("BBB", "Register successful: $it")
                 _uiState.value =

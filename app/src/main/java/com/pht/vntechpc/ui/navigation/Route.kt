@@ -17,6 +17,10 @@ sealed class Route(val route: String) {
     object Order: Route("order")
     object Address: Route("address")
     object Account: Route("account")
+    object EditProfile: Route("edit_profile")
+    object ChangePassword: Route("change_password")
+    object AddressForm: Route("address_form")
+//    object ProductDetail: Route("product_detail")
 }
 
 open class BottomNavigationItem(val route: String, val title: String, val icon: Int) {

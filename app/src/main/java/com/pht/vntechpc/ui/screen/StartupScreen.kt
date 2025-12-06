@@ -26,34 +26,43 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.pht.vntechpc.R
+import com.pht.vntechpc.ui.navigation.Graph
 import com.pht.vntechpc.ui.navigation.Route
 import com.pht.vntechpc.ui.theme.DarkBackground
+import com.pht.vntechpc.viewmodel.StartupState
 import com.pht.vntechpc.viewmodel.StartupViewModel
 
 @Composable
 fun StartupScreen(navController: NavController, viewModel: StartupViewModel = hiltViewModel()) {
-    val isLoggedIn by viewModel.isLoggedIn.collectAsState()
+    val state by viewModel.state.collectAsState()
 
-    LaunchedEffect(isLoggedIn) {
-        if (isLoggedIn == true) {
-            navController.navigate(Route.Main.route) {
-                popUpTo(Route.Startup.route) {
-                    inclusive = true
+    LaunchedEffect(state) {
+        when (state) {
+            StartupState.LoggedIn -> {
+                navController.navigate(Graph.Main.graph) {
+                    popUpTo(Graph.Auth.graph) {
+                        inclusive = true
+                    }
                 }
             }
-        } else {
-            navController.navigate(Route.Login.route) {
-                popUpTo(Route.Startup.route) {
-                    inclusive = true
+
+            StartupState.LoggedOut -> {
+                navController.navigate(Route.Login.route) {
+                    popUpTo(Route.Startup.route) {
+                        inclusive = true
+                    }
                 }
             }
+
+            StartupState.Pressing -> Unit
         }
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkBackground).systemBarsPadding(),
+            .background(DarkBackground)
+            .systemBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

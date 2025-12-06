@@ -1,10 +1,14 @@
 package com.pht.vntechpc.di
 
+import com.pht.vntechpc.data.repository.AddressRepositoryImpl
 import com.pht.vntechpc.data.repository.AuthRepositoryImpl
+import com.pht.vntechpc.data.repository.CartRepositoryImpl
 import com.pht.vntechpc.data.repository.CategoryRepositoryImpl
 import com.pht.vntechpc.data.repository.ProductRepositoryImpl
 import com.pht.vntechpc.data.repository.UserRepositoryImpl
+import com.pht.vntechpc.domain.repository.AddressRepository
 import com.pht.vntechpc.domain.repository.AuthRepository
+import com.pht.vntechpc.domain.repository.CartRepository
 import com.pht.vntechpc.domain.repository.CategoryRepository
 import com.pht.vntechpc.domain.repository.ProductRepository
 import com.pht.vntechpc.domain.repository.UserRepository
@@ -32,4 +36,12 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindProductRepository(productRepositoryImpl: ProductRepositoryImpl): ProductRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindCartRepository(cartRepositoryImpl: CartRepositoryImpl): CartRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAddressRepository(addressRepositoryImpl: AddressRepositoryImpl): AddressRepository
 }

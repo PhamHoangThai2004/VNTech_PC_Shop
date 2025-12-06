@@ -1,12 +1,18 @@
 package com.pht.vntechpc.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import com.pht.vntechpc.ui.screen.AccountScreen
+import com.pht.vntechpc.ui.screen.AddressFormScreen
 import com.pht.vntechpc.ui.screen.AddressScreen
 import com.pht.vntechpc.ui.screen.CartScreen
+import com.pht.vntechpc.ui.screen.ChangePasswordScreen
+import com.pht.vntechpc.ui.screen.EditProfileScreen
 import com.pht.vntechpc.ui.screen.ForgetScreen
 import com.pht.vntechpc.ui.screen.LoginScreen
 import com.pht.vntechpc.ui.screen.MainScreen
@@ -19,8 +25,16 @@ import com.pht.vntechpc.ui.screen.StartupScreen
 fun RootNavigation() {
     val navController = rememberNavController()
     NavHost(
-        navController = navController, startDestination = Route.Startup.route,
+        navController = navController, startDestination = Graph.Auth.graph,
     ) {
+        authNavGraph(navController)
+        mainNavGraph(navController)
+        addressNavGraph(navController)
+    }
+}
+
+fun NavGraphBuilder.authNavGraph(navController: NavController) {
+    navigation(startDestination = Route.Startup.route, route = Graph.Auth.graph) {
         composable(Route.Startup.route) {
             StartupScreen(navController)
         }
@@ -33,6 +47,11 @@ fun RootNavigation() {
         composable(Route.Forget.route) {
             ForgetScreen(navController)
         }
+    }
+}
+
+fun NavGraphBuilder.mainNavGraph(navController: NavController) {
+    navigation(startDestination = Route.Main.route, route = Graph.Main.graph) {
         composable(Route.Main.route) {
             MainScreen(navController)
         }
@@ -50,6 +69,23 @@ fun RootNavigation() {
         }
         composable(Route.Account.route) {
             AccountScreen(navController)
+        }
+        composable(Route.EditProfile.route) {
+            EditProfileScreen(navController)
+        }
+        composable(Route.ChangePassword.route) {
+            ChangePasswordScreen(navController)
+        }
+    }
+}
+
+fun NavGraphBuilder.addressNavGraph(navController: NavController) {
+    navigation(startDestination = Route.Address.route, route = Graph.Address.graph) {
+        composable(Route.Address.route) {
+            AddressScreen(navController)
+        }
+        composable(Route.AddressForm.route) {
+            AddressFormScreen(navController)
         }
     }
 }

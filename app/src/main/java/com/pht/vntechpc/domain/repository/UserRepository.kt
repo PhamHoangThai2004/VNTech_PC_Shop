@@ -1,6 +1,5 @@
 package com.pht.vntechpc.domain.repository
 
-import com.pht.vntechpc.data.remote.model.request.UserRequest
 import com.pht.vntechpc.data.remote.model.response.BaseResponse
 import com.pht.vntechpc.domain.model.User
 import java.io.File
@@ -17,10 +16,12 @@ interface UserRepository {
 
     suspend fun updateUser(
         email: String,
-        request: UserRequest
+        fullName: String,
+        gender: String,
+        dateOfBirth: String,
     ): Result<BaseResponse<Unit>>
 
-    suspend fun uploadAvatar(userId: String, file: File): Result<Unit>
+    suspend fun uploadAvatar(userId: Int, file: File): Result<User>
 
-    suspend fun deleteAvatar(userId: String): Result<Unit>
+    suspend fun deleteAvatar(userId: Int): Result<BaseResponse<Unit>>
 }

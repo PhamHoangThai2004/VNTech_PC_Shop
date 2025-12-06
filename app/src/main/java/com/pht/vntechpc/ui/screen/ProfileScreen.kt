@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -41,6 +42,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.pht.vntechpc.R
 import com.pht.vntechpc.ui.component.OutlinedButtonComponent
+import com.pht.vntechpc.ui.navigation.Graph
 import com.pht.vntechpc.ui.navigation.Route
 import com.pht.vntechpc.ui.theme.Background
 import com.pht.vntechpc.ui.theme.Border
@@ -54,7 +56,11 @@ import com.pht.vntechpc.viewmodel.ProfileViewModel
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ProfileScreen(rootNavController: NavController, viewModel: ProfileViewModel = hiltViewModel()) {
-    val user by viewModel.user.collectAsState()
+    val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.getUser()
+    }
 
     Scaffold(
         containerColor = Background,
@@ -94,7 +100,7 @@ fun ProfileScreen(rootNavController: NavController, viewModel: ProfileViewModel 
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                "Chào mừng, ${user?.fullName ?: "Người dùng"}",
+                "Xin chào, ${state.fullName ?: "Người dùng"}",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp),
@@ -110,7 +116,7 @@ fun ProfileScreen(rootNavController: NavController, viewModel: ProfileViewModel 
                     .border(2.dp, Border, CircleShape)
             ) {
                 AsyncImage(
-                    model = user?.avatar,
+                    model = state.avatar,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize(),
@@ -172,8 +178,8 @@ fun ProfileScreen(rootNavController: NavController, viewModel: ProfileViewModel 
             OutlinedButtonComponent(
                 onClick = {
                     viewModel.logout()
-                    rootNavController.navigate(Route.Login.route) {
-                        popUpTo(Route.Main.route) {
+                    rootNavController.navigate(Graph.Auth.graph) {
+                        popUpTo(Graph.Main.graph) {
                             inclusive = true
                         }
                     }

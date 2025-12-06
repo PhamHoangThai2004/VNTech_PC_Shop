@@ -1,6 +1,6 @@
 package com.pht.vntechpc.data.remote.model.response
 
-data class LoginResponse(
+data class AuthResponse(
     val expiresIn: Int,
     val role: String,
     val message: String,

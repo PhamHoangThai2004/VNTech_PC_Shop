@@ -10,7 +10,7 @@ import com.pht.vntechpc.domain.usecase.product.GetProductDetailUseCase
 import com.pht.vntechpc.domain.usecase.product.GetProductsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(

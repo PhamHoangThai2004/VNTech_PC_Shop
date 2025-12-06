@@ -35,11 +35,10 @@ interface UserApi {
     @Multipart
     @POST("v1/user/profile/{id}/avatar")
     suspend fun uploadAvatar(
-        @Path("id") userId: String,
+        @Path("id") userId: Int,
         @Part file: MultipartBody.Part
-    ): Response<Unit>
+    ): Response<BaseResponse<UserResponse>>
 
     @DELETE("v1/user/profile/{id}/avatar")
-    suspend fun deleteAvatar(@Path("id") userId: String): Response<Unit>
-
+    suspend fun deleteAvatar(@Path("id") userId: Int): Response<BaseResponse<Unit>>
 }
