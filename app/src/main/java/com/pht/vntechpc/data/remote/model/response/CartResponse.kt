@@ -20,6 +20,8 @@ fun CartResponse.toCart(): Cart {
         userId,
         totalItems,
         totalPrice,
+        selectedItems,
+        selectedItemsPrice,
         cartItems.map { it.toCartItem() },
     )
 }
@@ -37,6 +39,7 @@ fun CartItemResponse.toCartItem(): CartItem {
         id,
         quantity,
         price,
+        selected,
         product.toProductInCart()
     )
 }

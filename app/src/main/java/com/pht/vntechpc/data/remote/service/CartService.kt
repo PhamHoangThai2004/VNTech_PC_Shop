@@ -19,4 +19,7 @@ class CartService @Inject constructor(private val api: CartApi) {
         api.removeFromCart(cartItemId)
 
     suspend fun clearCart() = api.clearCart()
+
+    suspend fun selectCartItem(cartItemId: Int, selected: Boolean) =
+        api.selectCartItem(cartItemId, selected)
 }

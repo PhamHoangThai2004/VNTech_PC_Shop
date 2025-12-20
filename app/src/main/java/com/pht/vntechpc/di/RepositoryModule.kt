@@ -4,12 +4,14 @@ import com.pht.vntechpc.data.repository.AddressRepositoryImpl
 import com.pht.vntechpc.data.repository.AuthRepositoryImpl
 import com.pht.vntechpc.data.repository.CartRepositoryImpl
 import com.pht.vntechpc.data.repository.CategoryRepositoryImpl
+import com.pht.vntechpc.data.repository.OrderRepositoryImpl
 import com.pht.vntechpc.data.repository.ProductRepositoryImpl
 import com.pht.vntechpc.data.repository.UserRepositoryImpl
 import com.pht.vntechpc.domain.repository.AddressRepository
 import com.pht.vntechpc.domain.repository.AuthRepository
 import com.pht.vntechpc.domain.repository.CartRepository
 import com.pht.vntechpc.domain.repository.CategoryRepository
+import com.pht.vntechpc.domain.repository.OrderRepository
 import com.pht.vntechpc.domain.repository.ProductRepository
 import com.pht.vntechpc.domain.repository.UserRepository
 import dagger.Binds
@@ -44,4 +46,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindAddressRepository(addressRepositoryImpl: AddressRepositoryImpl): AddressRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindOrderRepository(orderRepositoryImpl: OrderRepositoryImpl): OrderRepository
 }

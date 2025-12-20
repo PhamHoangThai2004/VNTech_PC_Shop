@@ -80,4 +80,7 @@ dependencies {
 
 //    Library for datastore
     implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+//    Library for icons
+    implementation("androidx.compose.material:material-icons-extended")
 }

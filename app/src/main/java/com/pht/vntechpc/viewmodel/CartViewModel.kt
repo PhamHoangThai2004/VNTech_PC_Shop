@@ -7,6 +7,7 @@ import com.pht.vntechpc.domain.model.Cart
 import com.pht.vntechpc.domain.usecase.cart.ClearCartUseCase
 import com.pht.vntechpc.domain.usecase.cart.GetCartUseCase
 import com.pht.vntechpc.domain.usecase.cart.RemoveCartItemUseCase
+import com.pht.vntechpc.domain.usecase.cart.SelectCartItemUseCase
 import com.pht.vntechpc.domain.usecase.cart.UpdateQuantityUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -22,7 +23,8 @@ class CartViewModel @Inject constructor(
     private val getCartUseCase: GetCartUseCase,
     private val updateQuantityUseCase: UpdateQuantityUseCase,
     private val removeCartItemUseCase: RemoveCartItemUseCase,
-    private val clearCartUseCase: ClearCartUseCase
+    private val clearCartUseCase: ClearCartUseCase,
+    private val selectCartItemUseCase: SelectCartItemUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CartUiState())
     val uiState: StateFlow<CartUiState> = _uiState
@@ -32,17 +34,15 @@ class CartViewModel @Inject constructor(
     }
 
     fun getCart() {
+        _uiState.value = _uiState.value.copy(status = CartState.Loading("Đang tải..."))
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(status = CartState.Loading("Đang tải..."))
             val result = withContext(Dispatchers.IO) { getCartUseCase() }
             result.onSuccess {
-                val cart = it
                 _uiState.value = _uiState.value.copy(
-                    itemCount = cart.cartItems.size,
-                    cart = cart,
+                    cart = it,
                     status = CartState.None
                 )
-                Log.d("BBB", "Cart: $cart")
+                Log.d("BBB", "Cart: $it")
             }.onFailure {
                 Log.d("BBB", "Get Cart Faults: ${it.message}")
                 _uiState.value =
@@ -52,7 +52,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun updateQuantity(itemId: Int, newQuantity: Int) {
-        if (newQuantity <= 0 || newQuantity > 99) {
+        if (newQuantity !in 1..99) {
             Log.d("BBB", "Invalid quantity: $newQuantity")
             return
         }
@@ -62,10 +62,8 @@ class CartViewModel @Inject constructor(
                 updateQuantityUseCase(itemId, newQuantity)
             }
             result.onSuccess {
-                Log.d("BBB", "Update Quantity Success: $it")
                 _uiState.value = _uiState.value.copy(cart = it)
             }.onFailure {
-                Log.d("BBB", "Update Quantity Faults: ${it.message}")
                 _uiState.value =
                     _uiState.value.copy(status = CartState.Failure(it.message.toString()))
             }
@@ -73,12 +71,13 @@ class CartViewModel @Inject constructor(
     }
 
     fun removeItem(itemId: Int) {
+        _uiState.value = _uiState.value.copy(status = CartState.Loading("Đang xoá..."))
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 removeCartItemUseCase(itemId)
             }
             result.onSuccess {
-                Log.d("BBB", "Remove Item Success: $it")
+                _uiState.value = _uiState.value.copy(status = CartState.None)
                 getCart()
             }.onFailure {
                 Log.d("BBB", "Remove Item Faults: ${it.message}")
@@ -88,38 +87,57 @@ class CartViewModel @Inject constructor(
         }
     }
 
+    fun confirmClearCart() {
+        _uiState.value = _uiState.value.copy(
+            status = CartState.ConfirmClear("Bạn có chắc chắn muốn xoá tất cả sản phẩm trong giỏ hàng?")
+        )
+    }
+
     fun clearCart() {
+        _uiState.value = _uiState.value.copy(status = CartState.Loading("Đang xoá..."))
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 clearCartUseCase()
             }
-            result.onSuccess { it ->
-                Log.d("BBB", "Clear Cart Success: $it")
+            result.onSuccess {
                 _uiState.update {
                     it.copy(
-                        itemCount = 0,
                         cart = null,
+                        status = CartState.None
                     )
                 }
             }.onFailure {
-                Log.d("BBB", "Clear Cart Faults: ${it.message}")
                 _uiState.value.copy(status = CartState.Failure(it.message.toString()))
             }
         }
+    }
 
+    fun toggleSelectedItem(itemId: Int, selected: Boolean) {
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                selectCartItemUseCase(
+                    itemId, selected
+                )
+            }
+            result.onSuccess {
+                Log.d("BBB", "Toggle Selected Item Success: $it")
+                _uiState.value = _uiState.value.copy(cart = it)
+            }.onFailure {
+                _uiState.value.copy(status = CartState.Failure(it.message.toString()))
+            }
+        }
     }
 
 }
 
 data class CartUiState(
-    val itemCount: Int = 0,
     val cart: Cart? = null,
-    val selectedItemIds: List<Int> = emptyList(),
     val status: CartState = CartState.None
 )
 
 sealed class CartState {
     object None : CartState()
+    data class ConfirmClear(val message: String) : CartState()
     data class Loading(val message: String) : CartState()
     data class Failure(val message: String) : CartState()
 }

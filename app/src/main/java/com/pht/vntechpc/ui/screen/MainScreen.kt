@@ -1,6 +1,8 @@
 package com.pht.vntechpc.ui.screen
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -28,10 +30,11 @@ import com.pht.vntechpc.ui.theme.Unselected
 fun MainScreen(rootNavController: NavController) {
     val navController = rememberNavController()
     Scaffold(
-
         bottomBar = { BottomNavigationBar(navController = navController) }
-    ) {
-        BottomNavigation(navController, rootNavController as NavHostController)
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            BottomNavigation(navController, rootNavController as NavHostController)
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 package com.pht.vntechpc.ui.theme
 
+import android.icu.text.IDNA
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -12,7 +13,7 @@ val Pink40 = Color(0xFF7D5260)
 
 // Checkbox, Radio Button, Switch
 val Checked = Color(0xFF000000)
-val Unchecked = Color(0xFFFFFFFF)
+val Unchecked = Color(0xFF000000)
 val CheckMark = Color(0xFFFFFFFF)
 val CheckThumb = Color(0xFFFFFFFF)
 val CheckTrack = Color(0xFF000000)
@@ -62,3 +63,11 @@ val ButtonPrimaryContent = Color(0xFFFFFFFF)
 val ButtonSecondaryBackground = Color(0xFFFFFFFF)
 val ButtonSecondaryContent = Color(0xFF000000)
 val ButtonSecondaryBorder = Color(0xFF000000)
+
+// Function
+val TextSalePrice = Color(0xFFD11818)
+val TextOriginalPrice = Color(0xFF808080)
+val Active = Color(0xFF39BD39)
+val Inactive = Color(0xFFBD0006)
+val Info = Color(0xFF007BFF)
+val IconStar = Color(0xFFFFEB3B)

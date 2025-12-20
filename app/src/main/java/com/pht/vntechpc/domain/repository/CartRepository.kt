@@ -23,4 +23,6 @@ interface CartRepository {
     suspend fun removeProductFromCart( cartItemId: Int): Result<BaseResponse<Unit>>
 
     suspend fun clearCart(): Result<BaseResponse<Unit>>
+
+    suspend fun selectCartItem(cartItemId: Int, selected: Boolean): Result<Cart>
 }

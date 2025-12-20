@@ -5,5 +5,7 @@ data class Cart(
     val userId: Int,
     val totalItems: Int,
     val totalPrice: Long,
+    val selectedItems: Int,
+    val selectedItemsPrice: Long,
     val cartItems: List<CartItem>
 )

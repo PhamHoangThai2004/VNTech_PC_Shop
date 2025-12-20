@@ -5,6 +5,7 @@ import com.pht.vntechpc.data.remote.api.AddressApi
 import com.pht.vntechpc.data.remote.api.AuthApi
 import com.pht.vntechpc.data.remote.api.CartApi
 import com.pht.vntechpc.data.remote.api.CategoryApi
+import com.pht.vntechpc.data.remote.api.OrderApi
 import com.pht.vntechpc.data.remote.api.ProductApi
 import com.pht.vntechpc.data.remote.api.UserApi
 import com.pht.vntechpc.data.remote.network.ApiClient
@@ -51,4 +52,9 @@ object NetworkModule {
     @Singleton
     fun provideAddressApi(retrofit: Retrofit): AddressApi =
         retrofit.create(AddressApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideOrderApi(retrofit: Retrofit): OrderApi =
+        retrofit.create(OrderApi::class.java)
 }

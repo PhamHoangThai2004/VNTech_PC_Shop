@@ -15,12 +15,13 @@ sealed class Route(val route: String) {
     object Cart: Route("cart")
     object Settings: Route("settings")
     object Order: Route("order")
+    object OrderDetail: Route("order_detail")
     object Address: Route("address")
     object Account: Route("account")
     object EditProfile: Route("edit_profile")
     object ChangePassword: Route("change_password")
     object AddressForm: Route("address_form")
-//    object ProductDetail: Route("product_detail")
+    object Product: Route("product")
 }
 
 open class BottomNavigationItem(val route: String, val title: String, val icon: Int) {

@@ -4,5 +4,6 @@ data class CartItem(
     val id: Int,
     val quantity: Int,
     val price: Long,
+    val selected: Boolean,
     val product: ProductInCart
 )

@@ -1,8 +1,10 @@
 package com.pht.vntechpc.ui.screen
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,7 +29,6 @@ import com.pht.vntechpc.domain.model.Address
 import com.pht.vntechpc.ui.component.AddressItemCard
 import com.pht.vntechpc.ui.component.LoadingDialog
 import com.pht.vntechpc.ui.component.MessageDialog
-import com.pht.vntechpc.ui.component.OutlinedButtonComponent
 import com.pht.vntechpc.ui.navigation.Route
 import com.pht.vntechpc.ui.theme.Background
 import com.pht.vntechpc.ui.theme.DarkBackground
@@ -67,6 +68,15 @@ fun AddressScreen(navController: NavController, viewModel: AddressViewModel = hi
                             contentDescription = null
                         )
                     }
+                },
+                actions = {
+                    IconButton(onClick = { navController.navigate(Route.AddressForm.route) }) {
+                        Icon(
+                            painter = painterResource(R.drawable.add_24),
+                            contentDescription = null,
+                            tint = IconOnPrimary
+                        )
+                    }
                 }
             )
         }
@@ -85,9 +95,13 @@ fun AddressScreen(navController: NavController, viewModel: AddressViewModel = hi
                     viewModel::setDefaultAddress
                 )
             } else {
-                Text(text = "Không có địa chỉ nào")
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Không có địa chỉ nào")
+                }
             }
-
         }
     }
 }
@@ -99,7 +113,7 @@ private fun AddressesList(
     onSetDefaultAddress: (Int) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(addresses.size) { index ->
@@ -112,11 +126,6 @@ private fun AddressesList(
             }, onSetDefault = {
                 onSetDefaultAddress(it)
             })
-        }
-        item {
-            OutlinedButtonComponent(onClick = {
-                navController.navigate(Route.AddressForm.route)
-            }, content = "Thêm địa chỉ mới")
         }
     }
 }

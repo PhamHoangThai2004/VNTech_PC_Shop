@@ -1,15 +1,12 @@
 package com.pht.vntechpc.ui.screen
 
 import android.annotation.SuppressLint
-import android.util.Log
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -20,21 +17,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.pht.vntechpc.R
+import com.pht.vntechpc.domain.model.CartItem
 import com.pht.vntechpc.ui.component.CartItemCard
+import com.pht.vntechpc.ui.component.ConfirmDialog
 import com.pht.vntechpc.ui.component.LoadingDialog
 import com.pht.vntechpc.ui.component.MessageDialog
 import com.pht.vntechpc.ui.theme.Background
 import com.pht.vntechpc.ui.theme.DarkBackground
 import com.pht.vntechpc.ui.theme.IconOnPrimary
 import com.pht.vntechpc.ui.theme.TextOnPrimary
+import com.pht.vntechpc.ui.theme.TextPrimary
 import com.pht.vntechpc.viewmodel.CartState
 import com.pht.vntechpc.viewmodel.CartUiState
 import com.pht.vntechpc.viewmodel.CartViewModel
@@ -47,7 +49,6 @@ fun CartScreen(navController: NavController, viewModel: CartViewModel = hiltView
         viewModel.getCart()
     }
     val state by viewModel.uiState.collectAsState()
-
 
     HandleCartSideEffects(state, viewModel)
 
@@ -65,50 +66,62 @@ fun CartScreen(navController: NavController, viewModel: CartViewModel = hiltView
                         Icon(
                             painterResource(R.drawable.arrow_back_24),
                             tint = IconOnPrimary,
-                            contentDescription = null
+                            contentDescription = null,
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { viewModel.confirmClearCart() }) {
+                        Icon(
+                            painter = painterResource(R.drawable.delete_24),
+                            contentDescription = null,
+                            tint = IconOnPrimary
                         )
                     }
                 }
             )
         }
     ) { innerPadding ->
-        LazyColumn(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp)
+                .padding(16.dp),
         ) {
-            item { Button(onClick = { viewModel.clearCart() }) { Text("Xoá tất cả") } }
             val cartItems = state.cart?.cartItems
-            if (cartItems == null || cartItems.isEmpty()) {
-                item { Text("Giỏ hàng trống") }
+            if (cartItems != null && cartItems.isNotEmpty()) {
+                CartList(cartItems, viewModel)
             } else {
-                items(cartItems.size) { index ->
-                    CartItemCard(
-                        cartItem = cartItems[index],
-                        onQuantityChange = { newQuantity ->
-                            Log.d("BBB", "onQuantityChange: $newQuantity")
-                            viewModel.updateQuantity(cartItems[index].id, newQuantity)
-                        },
-                        onRemoveItem = {
-                            viewModel.removeItem(cartItems[index].id)
-                        }
-                    )
-                    if (index < cartItems.size) {
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        HorizontalDivider(
-                            Modifier, 1.dp,
-                            Color.Black
-                        )
-                    }
-                }
+                Text(
+                    "Giỏ hàng trống",
+                    fontSize = 16.sp,
+                    color = TextPrimary,
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
         }
     }
 }
 
+@Composable
+private fun CartList(cartItems: List<CartItem>, viewModel: CartViewModel) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        items(cartItems.size) { index ->
+            CartItemCard(
+                cartItem = cartItems[index],
+                onQuantityChange = { newQuantity ->
+                    viewModel.updateQuantity(cartItems[index].id, newQuantity)
+                },
+                onRemoveItem = {
+                    viewModel.removeItem(cartItems[index].id)
+                },
+                onToggleSelected = {
+                    viewModel.toggleSelectedItem(cartItems[index].id, it)
+                }
+            )
+        }
+    }
+}
 
 @Composable
 private fun HandleCartSideEffects(
@@ -118,6 +131,12 @@ private fun HandleCartSideEffects(
     when (val status = state.status) {
         is CartState.Failure -> {
             MessageDialog(message = status.message, onAction = { viewModel.resetState() })
+        }
+
+        is CartState.ConfirmClear -> {
+            ConfirmDialog(
+                message = status.message, onConfirm = { viewModel.clearCart() },
+                onDismiss = { viewModel.resetState() })
         }
 
         is CartState.Loading -> {

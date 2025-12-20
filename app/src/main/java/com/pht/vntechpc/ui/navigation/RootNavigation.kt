@@ -16,7 +16,9 @@ import com.pht.vntechpc.ui.screen.EditProfileScreen
 import com.pht.vntechpc.ui.screen.ForgetScreen
 import com.pht.vntechpc.ui.screen.LoginScreen
 import com.pht.vntechpc.ui.screen.MainScreen
+import com.pht.vntechpc.ui.screen.OrderDetailScreen
 import com.pht.vntechpc.ui.screen.OrdersScreen
+import com.pht.vntechpc.ui.screen.ProductScreen
 import com.pht.vntechpc.ui.screen.SettingsScreen
 import com.pht.vntechpc.ui.screen.SignupScreen
 import com.pht.vntechpc.ui.screen.StartupScreen
@@ -30,6 +32,7 @@ fun RootNavigation() {
         authNavGraph(navController)
         mainNavGraph(navController)
         addressNavGraph(navController)
+        orderNavGraph(navController)
     }
 }
 
@@ -76,6 +79,9 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
         composable(Route.ChangePassword.route) {
             ChangePasswordScreen(navController)
         }
+        composable(Route.Product.route) {
+            ProductScreen(navController)
+        }
     }
 }
 
@@ -86,6 +92,17 @@ fun NavGraphBuilder.addressNavGraph(navController: NavController) {
         }
         composable(Route.AddressForm.route) {
             AddressFormScreen(navController)
+        }
+    }
+}
+
+fun NavGraphBuilder.orderNavGraph(navController: NavController) {
+    navigation(startDestination = Route.Order.route, route = Graph.Order.graph) {
+        composable(Route.Order.route) {
+            OrdersScreen(navController)
+        }
+        composable(Route.OrderDetail.route) {
+            OrderDetailScreen(navController)
         }
     }
 }

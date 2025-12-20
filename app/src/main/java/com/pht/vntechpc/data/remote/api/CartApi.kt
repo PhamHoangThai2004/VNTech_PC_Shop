@@ -11,6 +11,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface CartApi {
     @GET("v1/cart")
@@ -37,4 +38,10 @@ interface CartApi {
 
     @DELETE("v1/cart")
     suspend fun clearCart(): Response<BaseResponse<Unit>>
+
+    @PUT("v1/cart/items/select")
+    suspend fun selectCartItem(
+        @Query("itemIds") cartItemId: Int,
+        @Query("selected") selected: Boolean
+    ): Response<BaseResponse<CartResponse>>
 }

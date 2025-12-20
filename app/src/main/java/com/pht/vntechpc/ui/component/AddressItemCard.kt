@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pht.vntechpc.domain.model.Address
@@ -28,7 +27,7 @@ import com.pht.vntechpc.ui.theme.DarkBackground
 import com.pht.vntechpc.ui.theme.TextOnPrimary
 import com.pht.vntechpc.ui.theme.TextPrimary
 import com.pht.vntechpc.ui.theme.UncheckBorder
-import com.pht.vntechpc.utils.formatPhoneNumber
+import com.pht.vntechpc.utils.StringFormat
 
 @Composable
 fun AddressItemCard(address: Address, onClick: (Address) -> Unit, onSetDefault: (Int) -> Unit) {
@@ -90,27 +89,11 @@ fun AddressItemCard(address: Address, onClick: (Address) -> Unit, onSetDefault: 
                 )
                 VerticalSpacer(10)
                 Text(
-                    text = formatPhoneNumber(address.phoneNumber),
+                    text = StringFormat.formatPhoneNumber(address.phoneNumber),
                     color = TextPrimary,
                     fontSize = 16.sp
                 )
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun TestPreview() {
-    val a = Address(
-        id = 1,
-        recipientName = "Phạm Hữu Thành",
-        addressDetail = "123",
-        ward = "Phường 1",
-        district = "Quận 1",
-        province = "TP.HCM",
-        phoneNumber = "0123456789",
-        isDefault = true
-    )
-    AddressItemCard(address = a, onClick = {}, onSetDefault = { a })
 }

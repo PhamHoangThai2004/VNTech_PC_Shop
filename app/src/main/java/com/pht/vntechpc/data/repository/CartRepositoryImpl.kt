@@ -48,4 +48,11 @@ class CartRepositoryImpl @Inject constructor(
     override suspend fun clearCart(): Result<BaseResponse<Unit>> {
         return apiCallNoData { cartService.clearCart() }
     }
+
+    override suspend fun selectCartItem(
+        cartItemId: Int,
+        selected: Boolean
+    ): Result<Cart> {
+        return apiCall({ cartService.selectCartItem(cartItemId, selected) }, { it.toCart() })
+    }
 }
