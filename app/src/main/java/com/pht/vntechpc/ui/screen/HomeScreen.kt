@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -45,9 +48,21 @@ import com.pht.vntechpc.viewmodel.HomeViewModel
 @Composable
 fun HomeScreen(rootNavController: NavController, viewModel: HomeViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsState()
+    val gridState = rememberLazyGridState()
 
     LaunchedEffect(Unit) {
         viewModel.getAllProducts()
+    }
+
+    LaunchedEffect(gridState) {
+        snapshotFlow {
+            gridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+        }.collect {
+            if (it != null && it >= state.products.size - 2) {
+                viewModel.loadMoreProducts()
+            }
+        }
+
     }
 
     HandleHomeSideEffects(state, viewModel, rootNavController)
@@ -94,24 +109,21 @@ fun HomeScreen(rootNavController: NavController, viewModel: HomeViewModel = hilt
                 .padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center
         ) {
-            ProductsListComponent(products = state.products, viewModel = viewModel)
-        }
-    }
-}
-
-@Composable
-private fun ProductsListComponent(products: List<Product>, viewModel: HomeViewModel) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(products.size) { it ->
-            ProductItemCart(
-                product = products[it],
-                onAddToCart = { viewModel.addProductToCart(it, 1) },
-                onProductClick = { viewModel.getProductById(it) }
-            )
+            LazyVerticalGrid(
+                state = gridState,
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                val products = state.products
+                items(products.size) { it ->
+                    ProductItemCart(
+                        product = products[it],
+                        onAddToCart = { viewModel.addProductToCart(it, 1) },
+                        onProductClick = { viewModel.getProductById(it) }
+                    )
+                }
+            }
         }
     }
 }

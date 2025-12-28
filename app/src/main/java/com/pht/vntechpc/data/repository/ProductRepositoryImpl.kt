@@ -10,8 +10,24 @@ import jakarta.inject.Inject
 
 class ProductRepositoryImpl @Inject constructor(private val service: ProductService) : BaseRepository(),
     ProductRepository {
-    override suspend fun fetchProducts(): Result<PagedProductsResponse> {
-        return apiCallRaw { service.fetchProducts() }
+    override suspend fun fetchProducts(
+        categoryId: Int?,
+        productName: String?,
+        brand: String?,
+        minPrice: Long?,
+        maxPrice: Long?,
+        page: Int,
+        size: Int
+    ): Result<PagedProductsResponse> {
+        return apiCallRaw { service.fetchProducts(
+            categoryId,
+            productName,
+            brand,
+            minPrice,
+            maxPrice,
+            page,
+            size
+        ) }
     }
 
     override suspend fun fetchProductById(productId: Int): Result<Product> {

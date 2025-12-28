@@ -1,12 +1,17 @@
 package com.pht.vntechpc.data.repository
 
+import com.pht.vntechpc.data.remote.model.request.CalculateShippingRequest
 import com.pht.vntechpc.data.remote.model.request.CreateOrderRequest
 import com.pht.vntechpc.data.remote.model.response.BaseResponse
 import com.pht.vntechpc.data.remote.model.response.toOrder
 import com.pht.vntechpc.data.remote.model.response.toOrderShort
+import com.pht.vntechpc.data.remote.model.response.toPaymentMethod
+import com.pht.vntechpc.data.remote.model.response.toShipping
 import com.pht.vntechpc.data.remote.service.OrderService
 import com.pht.vntechpc.domain.model.Order
 import com.pht.vntechpc.domain.model.OrderShort
+import com.pht.vntechpc.domain.model.PaymentMethod
+import com.pht.vntechpc.domain.model.Shipping
 import com.pht.vntechpc.domain.repository.BaseRepository
 import com.pht.vntechpc.domain.repository.OrderRepository
 import jakarta.inject.Inject
@@ -45,5 +50,17 @@ class OrderRepositoryImpl @Inject constructor(
 
     override suspend fun fetchOrderByCode(orderCode: String): Result<Order> {
         return apiCall({ service.fetchOrderByCode(orderCode) }) { it.toOrder() }
+    }
+
+    override suspend fun fetchPaymentMethods(): Result<List<PaymentMethod>> {
+        return apiCall({ service.fetchPaymentMethods() }) { it -> it.map { it.toPaymentMethod() } }
+    }
+
+    override suspend fun calculateShipping(
+        province: String,
+        orderValue: Long
+    ): Result<Shipping> {
+        val request = CalculateShippingRequest(province, orderValue)
+        return apiCall({ service.calculateShipping(request) }) { it.toShipping() }
     }
 }

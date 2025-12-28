@@ -4,8 +4,10 @@ import com.pht.vntechpc.data.remote.model.request.CartRequest
 import com.pht.vntechpc.data.remote.model.request.UpdateCartItemRequest
 import com.pht.vntechpc.data.remote.model.response.BaseResponse
 import com.pht.vntechpc.data.remote.model.response.toCart
+import com.pht.vntechpc.data.remote.model.response.toCartItem
 import com.pht.vntechpc.data.remote.service.CartService
 import com.pht.vntechpc.domain.model.Cart
+import com.pht.vntechpc.domain.model.CartItem
 import com.pht.vntechpc.domain.repository.BaseRepository
 import com.pht.vntechpc.domain.repository.CartRepository
 import jakarta.inject.Inject
@@ -47,6 +49,12 @@ class CartRepositoryImpl @Inject constructor(
 
     override suspend fun clearCart(): Result<BaseResponse<Unit>> {
         return apiCallNoData { cartService.clearCart() }
+    }
+
+    override suspend fun fetchSelectedCartItems(): Result<List<CartItem>> {
+        return apiCall(
+            { cartService.fetchSelectedCartItems() },
+            { it -> it.map { it.toCartItem() } })
     }
 
     override suspend fun selectCartItem(

@@ -6,7 +6,7 @@ data class UserResponse (
     val id: Int,
     val email: String,
     val username: String,
-    val fullName: String,
+    val fullName: String?,
     val gender: String,
     val avatar: String,
     val dateOfBirth: String

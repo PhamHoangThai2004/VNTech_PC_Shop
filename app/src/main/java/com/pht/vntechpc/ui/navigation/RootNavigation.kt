@@ -18,6 +18,7 @@ import com.pht.vntechpc.ui.screen.LoginScreen
 import com.pht.vntechpc.ui.screen.MainScreen
 import com.pht.vntechpc.ui.screen.OrderDetailScreen
 import com.pht.vntechpc.ui.screen.OrdersScreen
+import com.pht.vntechpc.ui.screen.PaymentScreen
 import com.pht.vntechpc.ui.screen.ProductScreen
 import com.pht.vntechpc.ui.screen.SettingsScreen
 import com.pht.vntechpc.ui.screen.SignupScreen
@@ -81,6 +82,9 @@ fun NavGraphBuilder.mainNavGraph(navController: NavController) {
         }
         composable(Route.Product.route) {
             ProductScreen(navController)
+        }
+        composable(Route.Payment.route) {
+            PaymentScreen(navController)
         }
     }
 }

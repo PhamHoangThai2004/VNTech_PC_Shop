@@ -1,5 +1,9 @@
 package com.pht.vntechpc.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class ProductInCart(
     val id: Int,
     val productName: String,
@@ -8,4 +12,4 @@ data class ProductInCart(
     val model: String,
     val stock: Int,
     val mainImage: String?
-)
+) : Parcelable

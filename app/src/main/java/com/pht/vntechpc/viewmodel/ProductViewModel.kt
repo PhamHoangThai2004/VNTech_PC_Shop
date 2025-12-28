@@ -27,6 +27,7 @@ class ProductViewModel @Inject constructor(
     }
 
     fun addProductToCart(productId: Int) {
+        _uiState.value = _uiState.value.copy(status = ProductState.Loading("Đang thêm..."))
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 addProductToCartUseCase(productId, 1)

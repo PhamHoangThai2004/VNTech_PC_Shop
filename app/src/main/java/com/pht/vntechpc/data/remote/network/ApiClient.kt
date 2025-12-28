@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object ApiClient {
-    private const val BASE_URL = "http://192.168.1.29:8080/api/"
+    private const val BASE_URL = "http://10.87.196.180:8080/api/"
 
     fun create(context: Context): Retrofit {
         val userPreferences = UserPreferences(context)
@@ -19,10 +19,10 @@ object ApiClient {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
-        val client = OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor {
-                runBlocking { userPreferences.getAccessToken() }
-            })
+        val client =      OkHttpClient.Builder()
+                    .addInterceptor(AuthInterceptor {
+                        runBlocking { userPreferences.getAccessToken() }
+                    })
             .addInterceptor(logging)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS).build()

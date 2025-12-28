@@ -3,9 +3,11 @@ package com.pht.vntechpc.ui.screen
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -32,11 +33,14 @@ import com.pht.vntechpc.ui.component.CartItemCard
 import com.pht.vntechpc.ui.component.ConfirmDialog
 import com.pht.vntechpc.ui.component.LoadingDialog
 import com.pht.vntechpc.ui.component.MessageDialog
+import com.pht.vntechpc.ui.component.OutlinedButtonComponent
+import com.pht.vntechpc.ui.navigation.Route
 import com.pht.vntechpc.ui.theme.Background
 import com.pht.vntechpc.ui.theme.DarkBackground
 import com.pht.vntechpc.ui.theme.IconOnPrimary
 import com.pht.vntechpc.ui.theme.TextOnPrimary
 import com.pht.vntechpc.ui.theme.TextPrimary
+import com.pht.vntechpc.utils.EnumConst
 import com.pht.vntechpc.viewmodel.CartState
 import com.pht.vntechpc.viewmodel.CartUiState
 import com.pht.vntechpc.viewmodel.CartViewModel
@@ -50,7 +54,7 @@ fun CartScreen(navController: NavController, viewModel: CartViewModel = hiltView
     }
     val state by viewModel.uiState.collectAsState()
 
-    HandleCartSideEffects(state, viewModel)
+    HandleCartSideEffects(state, viewModel, navController)
 
     Scaffold(
         containerColor = Background,
@@ -80,6 +84,26 @@ fun CartScreen(navController: NavController, viewModel: CartViewModel = hiltView
                     }
                 }
             )
+        },
+        bottomBar = {
+            val cartItems = state.cart?.cartItems
+            if (!cartItems.isNullOrEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .padding(vertical = 12.dp, horizontal = 16.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    OutlinedButtonComponent(
+                        onClick = { viewModel.getSelectedCartItems() },
+                        "Mua hàng",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp)
+                    )
+                }
+            }
         }
     ) { innerPadding ->
         Box(
@@ -126,23 +150,29 @@ private fun CartList(cartItems: List<CartItem>, viewModel: CartViewModel) {
 @Composable
 private fun HandleCartSideEffects(
     state: CartUiState,
-    viewModel: CartViewModel
+    viewModel: CartViewModel,
+    navController: NavController
 ) {
     when (val status = state.status) {
         is CartState.Failure -> {
             MessageDialog(message = status.message, onAction = { viewModel.resetState() })
         }
-
         is CartState.ConfirmClear -> {
             ConfirmDialog(
                 message = status.message, onConfirm = { viewModel.clearCart() },
                 onDismiss = { viewModel.resetState() })
         }
-
         is CartState.Loading -> {
             LoadingDialog(message = status.message)
         }
-
-        else -> Unit
+        is CartState.None -> Unit
+        is CartState.Success -> {
+            navController.currentBackStackEntry?.savedStateHandle?.set(
+                EnumConst.CART_ITEMS_KEY,
+                status.cartItems
+            )
+            navController.navigate(Route.Payment.route)
+            viewModel.resetState()
+        }
     }
 }

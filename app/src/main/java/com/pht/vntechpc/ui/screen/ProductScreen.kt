@@ -274,7 +274,7 @@ private fun ProductDetailLayout(product: Product) {
             SpanStyle(fontWeight = FontWeight.W500),
             SpanStyle(fontWeight = FontWeight.Normal)
         )
-        Text(product.description)
+        Text(product.description ?: "")
     }
 }
 

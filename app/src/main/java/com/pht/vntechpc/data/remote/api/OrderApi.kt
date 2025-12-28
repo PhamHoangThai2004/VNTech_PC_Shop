@@ -1,9 +1,13 @@
 package com.pht.vntechpc.data.remote.api
 
+import com.pht.vntechpc.data.remote.model.request.CalculateShippingRequest
 import com.pht.vntechpc.data.remote.model.request.CreateOrderRequest
 import com.pht.vntechpc.data.remote.model.response.BaseResponse
 import com.pht.vntechpc.data.remote.model.response.OrderResponse
 import com.pht.vntechpc.data.remote.model.response.OrderShortResponse
+import com.pht.vntechpc.data.remote.model.response.PaymentMethodResponse
+import com.pht.vntechpc.data.remote.model.response.ShippingResponse
+import com.pht.vntechpc.data.remote.network.NoAuth
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -40,4 +44,14 @@ interface OrderApi {
     suspend fun fetchOrderByCode(
         @Path("orderCode") orderCode: String
     ): Response<BaseResponse<OrderResponse>>
+
+    @NoAuth
+    @GET("v1/payment-methods")
+    suspend fun fetchPaymentMethods(): Response<BaseResponse<List<PaymentMethodResponse>>>
+
+    @NoAuth
+    @POST("v1/shipping/calculate")
+    suspend fun calculateShipping(
+        @Body request: CalculateShippingRequest
+    ): Response<BaseResponse<ShippingResponse>>
 }

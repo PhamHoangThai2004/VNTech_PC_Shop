@@ -3,6 +3,7 @@ package com.pht.vntechpc.data.remote.api
 import com.pht.vntechpc.data.remote.model.request.CartRequest
 import com.pht.vntechpc.data.remote.model.request.UpdateCartItemRequest
 import com.pht.vntechpc.data.remote.model.response.BaseResponse
+import com.pht.vntechpc.data.remote.model.response.CartItemResponse
 import com.pht.vntechpc.data.remote.model.response.CartResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -38,6 +39,9 @@ interface CartApi {
 
     @DELETE("v1/cart")
     suspend fun clearCart(): Response<BaseResponse<Unit>>
+
+    @GET("v1/cart/selected-items")
+    suspend fun fetchSelectedCartItems(): Response<BaseResponse<List<CartItemResponse>>>
 
     @PUT("v1/cart/items/select")
     suspend fun selectCartItem(

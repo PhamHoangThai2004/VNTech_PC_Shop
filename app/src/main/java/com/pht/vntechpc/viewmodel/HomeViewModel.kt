@@ -30,7 +30,11 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getAllProducts() {
-        _uiState.value = _uiState.value.copy(status = HomeState.Loading("Đang tải..."))
+        _uiState.value = _uiState.value.copy(
+            status = HomeState.Loading("Đang tải..."),
+            page = 0,
+            isLastPage = false
+        )
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) { getProductsUseCase() }
             result.onSuccess { it ->
@@ -43,6 +47,41 @@ class HomeViewModel @Inject constructor(
             }.onFailure {
                 _uiState.value =
                     _uiState.value.copy(status = HomeState.Failure(it.message.toString()))
+            }
+        }
+    }
+
+    fun loadMoreProducts() {
+        if (_uiState.value.isLoadingMore || _uiState.value.isLastPage) return
+        _uiState.value = _uiState.value.copy(isLoadingMore = true)
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                getProductsUseCase(page = _uiState.value.page + 1)
+            }
+            result.onSuccess { it ->
+                val response = it.content
+                val newProducts = response.map { it.toProduct() }
+                if (newProducts.isEmpty()) {
+                    _uiState.value = _uiState.value.copy(isLastPage = true)
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        products = _uiState.value.products + newProducts,
+                        status = HomeState.None,
+                        isLoadingMore = false,
+                        page = _uiState.value.page + 1,
+                        isLastPage = newProducts.isEmpty()
+                    )
+                    Log.d(
+                        "BBB",
+                        "New products: ${_uiState.value.products.size}, and ${_uiState.value.page}"
+                    )
+                }
+            }.onFailure {
+                _uiState.value =
+                    _uiState.value.copy(
+                        isLoadingMore = false,
+                        status = HomeState.Failure(it.message.toString())
+                    )
             }
         }
     }
@@ -81,6 +120,9 @@ class HomeViewModel @Inject constructor(
 data class HomeUiState(
     val products: List<Product> = emptyList(),
     val status: HomeState = HomeState.None,
+    val isLoadingMore: Boolean = false,
+    val page: Int = 0,
+    val isLastPage: Boolean = false
 )
 
 sealed class HomeState {

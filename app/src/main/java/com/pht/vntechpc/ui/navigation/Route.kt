@@ -22,6 +22,7 @@ sealed class Route(val route: String) {
     object ChangePassword: Route("change_password")
     object AddressForm: Route("address_form")
     object Product: Route("product")
+    object Payment: Route("payment")
 }
 
 open class BottomNavigationItem(val route: String, val title: String, val icon: Int) {

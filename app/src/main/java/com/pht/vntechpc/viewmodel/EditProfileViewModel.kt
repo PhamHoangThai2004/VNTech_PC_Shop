@@ -35,7 +35,7 @@ class EditProfileViewModel @Inject constructor(
     fun updateFullName(fullName: String) {
         if (fullName.trim().length > 255) {
             _uiState.value = _uiState.value.copy(
-                fullName = fullName,
+                fullName = fullName ,
                 isValid = false,
                 fullNameError = "Tên quá dài"
             )
@@ -76,7 +76,7 @@ class EditProfileViewModel @Inject constructor(
     fun setUser(user: User) {
         _user = user
         _uiState.value = _uiState.value.copy(
-            fullName = user.fullName,
+            fullName = user.fullName ?: "",
             gender = user.gender ?: "Chưa có",
             dateOfBirth = user.dateOfBirth ?: "Chưa có",
             avatar = user.avatar ?: ""
